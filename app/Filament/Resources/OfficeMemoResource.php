@@ -5,8 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OfficeMemoResource\Pages;
 use App\Filament\Resources\OfficeMemoResource\RelationManagers;
 use App\Filament\Resources\OfficeMemoResource\RelationManagers\EmployeesRelationManager;
+use App\Filament\Resources\OfficeMemoResource\Widgets\OfficeMemoOverview;
 use App\Models\OfficeMemo;
-use App\Models\Signatories;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -25,6 +25,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use Filament\Forms\Components\Card;
 use App\Http\Controllers\downloadController;
+use App\Models\Signatory;
 use Filament\Tables\Actions\Action;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
@@ -37,7 +38,7 @@ class OfficeMemoResource extends Resource
 
     protected static ?string $navigationGroup = 'NEA Memoranda';
     protected static ?string $navigationLabel = 'Office Memo';
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-list';
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
@@ -53,7 +54,7 @@ class OfficeMemoResource extends Resource
     
                 Select::make('signatory')
                 ->label('Signatory')
-                ->options(Signatories::all()->pluck('fullname','fullname'))
+                ->options(Signatory::all()->pluck('fullname','fullname'))
                 ->searchable()->required(),
     
                 DateTimePicker::make('date_posted')->required(),
@@ -83,7 +84,6 @@ class OfficeMemoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->button(),
                 Action::make('download')
                 ->color('success')
                 ->icon('heroicon-s-download')
@@ -102,6 +102,12 @@ class OfficeMemoResource extends Resource
     {
         return [
             EmployeesRelationManager::class,
+        ];
+    }
+    public static function getWidgets(): array
+    {
+        return[
+            OfficeMemoOverview::class,
         ];
     }
     

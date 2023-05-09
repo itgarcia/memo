@@ -23,4 +23,9 @@ class downloadController extends Controller
         $filepath = storage_path("app/public/{$data->upload}");
         return Response()->download($filepath);
     }
+    public function downloadadv($id){
+        $data = DB::table('advisories')->where('id', $id)->first();
+        $filepath = storage_path("app/public/{$data->upload}");
+        return Response()->download($filepath);
+    }
 }

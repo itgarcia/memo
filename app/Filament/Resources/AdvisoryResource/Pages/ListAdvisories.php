@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\MemoToEcResource\Pages;
+namespace App\Filament\Resources\AdvisoryResource\Pages;
 
-use App\Filament\Resources\MemoToEcResource;
+use App\Filament\Resources\AdvisoryResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListMemoToEcs extends ListRecords
+class ListAdvisories extends ListRecords
 {
-    protected static string $resource = MemoToEcResource::class;
+    protected static string $resource = AdvisoryResource::class;
 
     protected function getActions(): array
     {

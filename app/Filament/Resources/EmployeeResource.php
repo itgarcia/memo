@@ -21,9 +21,11 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationGroup = 'Employees Management';
     protected static ?string $navigationLabel = 'Employees';
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
@@ -33,7 +35,7 @@ class EmployeeResource extends Resource
             Card::make()->schema([
             TextInput::make('name')
             ->label('Full Name')
-            ->required(),
+            ->required()->autofocus(),
 
         ])->columns(2)
         ]);

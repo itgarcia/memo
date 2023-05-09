@@ -22,3 +22,4 @@ Route::get('/', function () {
 Route::get('download/{id}', [downloadController::class, 'download'])->name('download');
 Route::get('downloadmemo/{id}', [downloadController::class, 'downloadmemo'])->name('downloadmemo');
 Route::get('downloadmemotoecs/{id}', [downloadController::class, 'downloadmemotoecs'])->name('downloadmemotoecs');
+Route::get('downloadadv/{id}', [downloadController::class, 'downloadadv'])->name('downloadadv');

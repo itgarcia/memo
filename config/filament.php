@@ -1,5 +1,7 @@
 <?php
 
+use App\Filament\Resources\OfficeOrderResource\Widgets\Memo;
+use App\Filament\Resources\OfficeOrderResource\Widgets\OfficeOrderOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Http\Middleware\MirrorConfigToSubpackages;
@@ -105,7 +107,7 @@ return [
         'namespace' => 'App\\Filament\\Pages',
         'path' => app_path('Filament/Pages'),
         'register' => [
-            Pages\Dashboard::class,
+
         ],
     ],
 
@@ -140,7 +142,8 @@ return [
         'path' => app_path('Filament/Widgets'),
         'register' => [
             Widgets\AccountWidget::class,
-            Widgets\FilamentInfoWidget::class,
+            OfficeOrderOverview::class,
+    
         ],
     ],
 

@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MemoToEcResource\Pages;
 use App\Filament\Resources\MemoToEcResource\RelationManagers;
 use App\Models\MemoToEc;
-use App\Models\Signatories;
+use App\Models\Signatory;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -37,7 +37,7 @@ class MemoToEcResource extends Resource
 
     protected static ?string $navigationGroup = 'NEA Memoranda';
     protected static ?string $navigationLabel = 'Memo To ECs';
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-lightning-bolt';
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
@@ -57,7 +57,7 @@ class MemoToEcResource extends Resource
     
                 Select::make('signatory')
                 ->label('Signatory')
-                ->options(Signatories::all()->pluck('fullname','fullname'))
+                ->options(Signatory::all()->pluck('fullname','fullname'))
                 ->searchable()->required(),
     
                 DateTimePicker::make('date_posted')->required(),
@@ -90,7 +90,6 @@ class MemoToEcResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->button(), 
                 Action::make('download')
                 ->color('success')
                 ->icon('heroicon-s-download')
