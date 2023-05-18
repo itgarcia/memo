@@ -61,7 +61,10 @@ class SignatoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -81,6 +84,7 @@ class SignatoryResource extends Resource
             'index' => Pages\ListSignatories::route('/'),
             'create' => Pages\CreateSignatory::route('/create'),
             'edit' => Pages\EditSignatory::route('/{record}/edit'),
+            'view' => Pages\ViewSignatory::route('/{record}'),
         ];
     }    
 }

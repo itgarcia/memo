@@ -25,6 +25,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use Filament\Forms\Components\Card;
 use App\Http\Controllers\downloadController;
+use App\Models\Department;
 use App\Models\Signatory;
 use Filament\Tables\Actions\Action;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
@@ -46,15 +47,27 @@ class OfficeMemoResource extends Resource
         return $form
         ->schema([
             Card::make()->schema([
-                DatePicker::make('date_memo')->required(),
-
                 Textarea::make('title')
                 ->rows(3)
                 ->cols(20)->required(),
+
+                DatePicker::make('date_memo')->required(),
+
+                Select::make('employees')
+                ->label('Employee')
+                ->multiple()
+                ->relationship('employees', 'name')
+                ->preload()
+                ->searchable(),
     
                 Select::make('signatory')
                 ->label('Signatory')
                 ->options(Signatory::all()->pluck('fullname','fullname'))
+                ->searchable()->required(),
+
+                Select::make('dept')
+                ->label('From Department')
+                ->options(Department::all()->pluck('code','code'))
                 ->searchable()->required(),
     
                 DateTimePicker::make('date_posted')->required(),
@@ -78,12 +91,16 @@ class OfficeMemoResource extends Resource
             ->size('sm')->wrap()
             ->description(fn (OfficeMemo $record): string => $record->signatory, position: 'below'),
             Tables\Columns\TextColumn::make('date_posted')->sortable()->dateTime()->size('sm'),
-                     //
+            Tables\Columns\TextColumn::make('dept')->sortable()->searchable(),         //
         ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
                 Action::make('download')
                 ->color('success')
                 ->icon('heroicon-s-download')
@@ -117,6 +134,7 @@ class OfficeMemoResource extends Resource
             'index' => Pages\ListOfficeMemos::route('/'),
             'create' => Pages\CreateOfficeMemo::route('/create'),
             'edit' => Pages\EditOfficeMemo::route('/{record}/edit'),
+            'view' => Pages\ViewOfficeMemo::route('/{record}'),
         ];
     }    
 }

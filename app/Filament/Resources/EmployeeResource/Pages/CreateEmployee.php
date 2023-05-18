@@ -14,4 +14,9 @@ class CreateEmployee extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+  
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Employee Successfully Registered!';
+    }
 }

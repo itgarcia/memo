@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OfficeMemo extends Model
 {
     use HasFactory;
-    protected $fillable = ['date_memo', 'title', 'signatory','date_posted','upload'];
+    protected $fillable = ['date_memo', 'title', 'signatory','dept','date_posted','upload'];
 
     public function employees()
     {

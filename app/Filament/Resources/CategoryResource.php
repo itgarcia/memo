@@ -62,7 +62,10 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

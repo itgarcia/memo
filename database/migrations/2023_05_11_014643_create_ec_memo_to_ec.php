@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('ec_memo_to_ec', function (Blueprint $table) {
+            $table->foreignId('ec_id')->constrained();
+            $table->foreignId('memo_to_ec_id')->constrained();
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('ec_memo_to_ec');
     }
 };

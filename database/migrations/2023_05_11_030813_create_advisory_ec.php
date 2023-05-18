@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('signatories', function (Blueprint $table) {
-            $table->id();
-            $table->string('fullname', 100);
-            $table->timestamps();
+        Schema::create('advisory_ec', function (Blueprint $table) {
+            $table->foreignId('ec_id')->constrained();
+            $table->foreignId('advisory_id')->constrained();
         });
     }
 
@@ -23,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('signatories');
+        Schema::dropIfExists('advisory_ec');
     }
 };

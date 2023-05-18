@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('office_order_tag', function (Blueprint $table) {
-            $table->foreignId('Officeorder_id')->constrained();
-            $table->foreignId('Tags_id')->constrained();
+        Schema::create('ecs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->timestamps();
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('office_order_tag');
+        Schema::dropIfExists('ecs');
     }
 };

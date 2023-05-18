@@ -14,4 +14,8 @@ class CreateOfficeOrder extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Office Order Successfully Created!';
+    }
 }

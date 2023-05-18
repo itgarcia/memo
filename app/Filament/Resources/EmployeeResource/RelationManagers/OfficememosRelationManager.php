@@ -38,16 +38,15 @@ class OfficememosRelationManager extends RelationManager
             ])
             ->headerActions([
 
-                Tables\Actions\AttachAction::make(),
+               
             ])
             ->actions([
 
-                Tables\Actions\DetachAction::make(),
+             
 
             ])
             ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
-                Tables\Actions\DeleteBulkAction::make(),
+               
             ]);
     }    
 }

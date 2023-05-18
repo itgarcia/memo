@@ -9,6 +9,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\OfficeOrder;
 
 class OfficeordersRelationManager extends RelationManager
 {
@@ -33,22 +34,23 @@ class OfficeordersRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('no_memo')->label('Office Order No.'),
                 Tables\Columns\TextColumn::make('title')->label('Title')
                 ->size('sm')
-                ->wrap(),
+                ->wrap()
+                ->description(fn (OfficeOrder $record): string => $record->date_memo, position: 'above'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
 
-                Tables\Actions\AttachAction::make(),
+              
             ])
             ->actions([
 
-                Tables\Actions\DetachAction::make(),
+           
    
             ])
             ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+              
             ]);
     }    
 }

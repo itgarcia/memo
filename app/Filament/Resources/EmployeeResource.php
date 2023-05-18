@@ -23,7 +23,7 @@ class EmployeeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationGroup = 'Employees Management';
+    protected static ?string $navigationGroup = 'Employees and ECs';
     protected static ?string $navigationLabel = 'Employees';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 2;
@@ -51,7 +51,10 @@ class EmployeeResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -72,6 +75,7 @@ class EmployeeResource extends Resource
             'index' => Pages\ListEmployees::route('/'),
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'view' => Pages\ViewEmployee::route('/{record}'),
         ];
     }    
 }

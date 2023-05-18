@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AdvisoryResource\Pages;
 use App\Filament\Resources\AdvisoryResource\RelationManagers;
+use App\Filament\Resources\AdvisoryResource\RelationManagers\EcsRelationManager;
 use App\Models\Advisory;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -25,6 +26,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use App\Http\Controllers\downloadController;
 use App\Models\Category;
+use App\Models\Department;
 use App\Models\Signatory;
 use Filament\Tables\Actions\RecordCheckboxPosition;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
@@ -56,8 +58,7 @@ class AdvisoryResource extends Resource
                 ->searchable()->required(),
 
                 TextInput::make('no_memo')
-                ->label('Document Number')
-                ->required(),
+                ->label('Document Number'),
 
                 DatePicker::make('date_memo')->required(),
     
@@ -68,6 +69,18 @@ class AdvisoryResource extends Resource
                 Select::make('signatory')
                 ->label('Signatory')
                 ->options(Signatory::all()->pluck('fullname','fullname'))
+                ->searchable()->required(),
+
+                Select::make('ecs')
+                ->label('EC/s')
+                ->multiple()
+                ->relationship('ecs', 'name')
+                ->preload()
+                ->searchable(),
+
+                Select::make('dept')
+                ->label('From Department')
+                ->options(Department::all()->pluck('code','code'))
                 ->searchable()->required(),
     
                 DateTimePicker::make('date_posted')->required(),
@@ -93,7 +106,7 @@ class AdvisoryResource extends Resource
             ->description(fn (Advisory $record): string => $record->no_memo, position: 'above')
             ->description(fn (Advisory $record): string => $record->signatory, position: 'below'),
             Tables\Columns\TextColumn::make('date_posted')->sortable()->dateTime()->size('sm'),
-                      //
+            Tables\Columns\TextColumn::make('dept')->sortable()->searchable(),          //
         ])
             ->filters([
                 SelectFilter::make('category')
@@ -110,6 +123,10 @@ class AdvisoryResource extends Resource
                 ]),
                 ])
             ->actions([
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
                 Action::make('download')
                 ->color('success')
                 ->icon('heroicon-s-download')
@@ -127,7 +144,7 @@ class AdvisoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EcsRelationManager::class,
         ];
     }
     
@@ -137,6 +154,7 @@ class AdvisoryResource extends Resource
             'index' => Pages\ListAdvisories::route('/'),
             'create' => Pages\CreateAdvisory::route('/create'),
             'edit' => Pages\EditAdvisory::route('/{record}/edit'),
+            'view' => Pages\ViewAdvisory::route('/{record}'),
         ];
     }    
 }

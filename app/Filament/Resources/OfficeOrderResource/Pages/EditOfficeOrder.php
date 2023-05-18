@@ -16,4 +16,13 @@ class EditOfficeOrder extends EditRecord
            
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Successfully Updated!';
+    }
+
 }

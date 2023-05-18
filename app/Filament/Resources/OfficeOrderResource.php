@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\MemoToEcResource\RelationManagers\EcsRelationManager;
 use App\Filament\Resources\OfficeOrderResource\Pages;
 use Filament\Tables\Actions\Action;
 use App\Filament\Resources\OfficeOrderResource\RelationManagers;
@@ -9,6 +10,7 @@ use App\Filament\Resources\OfficeOrderResource\RelationManagers\EmployeesRelatio
 use App\Filament\Resources\OfficeOrderResource\Widgets\OfficeOrderOverview;
 use App\Models\OfficeOrder;
 use App\Models\Signatory;
+use App\Models\Employee;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -27,6 +29,8 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use App\Http\Controllers\downloadController;
+use App\Models\Department;
+use Filament\Forms\Components\MultiSelect;
 use Filament\Tables\Actions\RecordCheckboxPosition;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
@@ -47,22 +51,45 @@ class OfficeOrderResource extends Resource
         return $form
         ->schema([
             Card::make()->schema([
-                DatePicker::make('date_memo')->required(),
-
                 TextInput::make('no_memo')
                 ->label('Document Number')
+                ->unique(ignorable: fn ($record) => $record)
                 ->required(),
-    
+
+                DatePicker::make('date_memo')->required(),
+
+               
                 Textarea::make('title')
                 ->rows(3)
                 ->cols(20)->required(),
+
+                Select::make('employees')
+                ->label('Employee/s')
+                ->multiple()
+                ->relationship('employees', 'name')
+                ->preload()
+                ->searchable(),
     
                 Select::make('signatory')
                 ->label('Signatory')
                 ->options(Signatory::all()->pluck('fullname','fullname'))
                 ->searchable()->required(),
-    
+                
+                Select::make('dept')
+                ->label('From Department')
+                ->options(Department::all()->pluck('code','code'))
+                ->searchable()->required(),
+                
+
                 DateTimePicker::make('date_posted')->required(),
+
+                Select::make('ecs')
+                ->label('EC/s')
+                ->multiple()
+                ->relationship('ecs', 'name')
+                ->preload()
+                ->searchable(),
+
                 FileUpload::make('upload')
                 ->preserveFilenames()
                 ->acceptedFileTypes(['application/pdf'])
@@ -84,15 +111,35 @@ class OfficeOrderResource extends Resource
             ->description(fn (OfficeOrder $record): string => $record->no_memo, position: 'above')
             ->description(fn (OfficeOrder $record): string => $record->signatory, position: 'below'),
             Tables\Columns\TextColumn::make('date_posted')->sortable()->dateTime()->size('sm'),
+            Tables\Columns\TextColumn::make('dept')->sortable()->searchable(),
             
            
                          //
         ])
             ->filters([
+                Filter::make('date_memo')
+    ->form([
+        Forms\Components\DatePicker::make('date_from'),
+        Forms\Components\DatePicker::make('date_until'),
+    ])
+    ->query(function (Builder $query, array $data): Builder {
+        return $query
+            ->when(
+                $data['date_from'],
+                fn (Builder $query, $date): Builder => $query->whereDate('date_memo', '>=', $date),
+            )
+            ->when(
+                $data['date_until'],
+                fn (Builder $query, $date): Builder => $query->whereDate('date_memo', '<=', $date),
+            );
+    })
               
             ])
             ->actions([
-               
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
                 Action::make('download')
                 ->color('success')
                 ->icon('heroicon-s-download')
@@ -111,6 +158,7 @@ class OfficeOrderResource extends Resource
     {
         return [
             EmployeesRelationManager::class,
+            EcsRelationManager::class,
         ];
     }
 
@@ -123,6 +171,7 @@ class OfficeOrderResource extends Resource
             'index' => Pages\ListOfficeOrders::route('/'),
             'create' => Pages\CreateOfficeOrder::route('/create'),
             'edit' => Pages\EditOfficeOrder::route('/{record}/edit'),
+            'view' => Pages\ViewOfficeOrder::route('/{record}'),
         ];
     }    
 }

@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('signatories');
+        Schema::table('advisories', function (Blueprint $table) {
+            $table->string('dept', 100)->after('signatory');
+        });
     }
 
     /**
@@ -19,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('advisories', function (Blueprint $table) {
+            //
+        });
     }
 };

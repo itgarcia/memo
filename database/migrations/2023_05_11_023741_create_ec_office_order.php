@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('office_memos', function (Blueprint $table) {
-            $table->dropColumn('no_memo');
+        Schema::create('ec_office_order', function (Blueprint $table) {
+            $table->foreignId('ec_id')->constrained();
+            $table->foreignId('office_order_id')->constrained();
         });
     }
 
@@ -21,8 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('office_memos', function (Blueprint $table) {
-            
-        });
+        Schema::dropIfExists('ec_office_order');
     }
 };

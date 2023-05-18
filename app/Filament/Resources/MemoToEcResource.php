@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MemoToEcResource\Pages;
-use App\Filament\Resources\MemoToEcResource\RelationManagers;
+use App\Filament\Resources\MemoToEcResource\RelationManagers\EcsRelationManager;
 use App\Models\MemoToEc;
 use App\Models\Signatory;
 use Filament\Forms;
@@ -25,6 +25,7 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use App\Http\Controllers\downloadController;
+use App\Models\Department;
 use Filament\Tables\Actions\RecordCheckboxPosition;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
@@ -48,8 +49,7 @@ class MemoToEcResource extends Resource
                 DatePicker::make('date_memo')->required(),
 
                 TextInput::make('no_memo')
-                ->label('Memo to ECs No.')
-                ->required(),
+                ->label('Memo to ECs No.'),
     
                 Textarea::make('title')
                 ->rows(3)
@@ -58,6 +58,18 @@ class MemoToEcResource extends Resource
                 Select::make('signatory')
                 ->label('Signatory')
                 ->options(Signatory::all()->pluck('fullname','fullname'))
+                ->searchable()->required(),
+
+                Select::make('ecs')
+                ->label('EC/s')
+                ->multiple()
+                ->relationship('ecs', 'name')
+                ->preload()
+                ->searchable(),
+
+                Select::make('dept')
+                ->label('From Department')
+                ->options(Department::all()->pluck('code','code'))
                 ->searchable()->required(),
     
                 DateTimePicker::make('date_posted')->required(),
@@ -82,7 +94,7 @@ class MemoToEcResource extends Resource
             ->description(fn (MemoToEc $record): string => $record->no_memo, position: 'above')
             ->description(fn (MemoToEc $record): string => $record->signatory, position: 'below'),
             Tables\Columns\TextColumn::make('date_posted')->sortable()->dateTime()->size('sm'),
-            
+            Tables\Columns\TextColumn::make('dept')->sortable()->searchable(),
            
                          //
         ])
@@ -90,6 +102,10 @@ class MemoToEcResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\EditAction::make()
+                ->color('warning')
+                ->icon('heroicon-s-download')
+                ->button(),
                 Action::make('download')
                 ->color('success')
                 ->icon('heroicon-s-download')
@@ -107,7 +123,7 @@ class MemoToEcResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           EcsRelationManager::class,
         ];
     }
     
@@ -117,6 +133,7 @@ class MemoToEcResource extends Resource
             'index' => Pages\ListMemoToEcs::route('/'),
             'create' => Pages\CreateMemoToEc::route('/create'),
             'edit' => Pages\EditMemoToEc::route('/{record}/edit'),
+            'view' => Pages\ViewMemoToEc::route('/{record}'),
         ];
     }    
 }

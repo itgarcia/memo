@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('office_order_tags', function (Blueprint $table) {
-            $table->foreignId('office_order_id')->constrained();
-            $table->foreignId('tags_id')->constrained();
+        Schema::create('ec_advisory', function (Blueprint $table) {
+            $table->foreignId('ec_id')->constrained();
+            $table->foreignId('advisory_id')->constrained();
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('office_order_tags');
+        Schema::dropIfExists('ec_advisory');
     }
 };
