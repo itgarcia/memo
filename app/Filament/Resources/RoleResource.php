@@ -25,6 +25,7 @@ class RoleResource extends Resource
     protected static ?string $navigationGroup = 'Admin Management';
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
     protected static ?int $navigationSort = 2;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {
@@ -79,6 +80,6 @@ class RoleResource extends Resource
     }    
     public static function getEloquentQuery(): Builder
 {
-    return parent::getEloquentQuery()->where('name', '!=', 'Admin');
+    return parent::getEloquentQuery()->where('name', '!=', 'superadmin');
 }
 }
